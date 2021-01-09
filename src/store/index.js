@@ -11,18 +11,82 @@ export default new Vuex.Store({
 
   },
   getters: {
-    chargeData: state => {
-      let datas = []
+    // chargeData: state => {
+    //   let newDatas = []
+      
+    //   state.chargeDatas.forEach(key => {
+    //     newDatas.push({
+    //       title: key.statNm,
+    //       latlng: new kakao.maps.LatLng(+key.lat, +key.lng),
+    //       stat: +key.stat[0]
+    //     })
+    //   })
+    //   // for test
+    //   // newDatas = newDatas.slice(0, 100)
+    //   return newDatas
+    // },
+    latlng: state => {
+      let newDatas = {}
+      let positionArr = []
+      
       state.chargeDatas.forEach(key => {
-        datas.push({
-          title: key.statNm,
-          latlng: new kakao.maps.LatLng(Number(key.lat), Number(key.lng)),
+        positionArr.push({
+          statNm: key.statNm,
+          statId: key.statId,
+          chgerId: key.chgerId,
+          chgerType: key.chgerType,
+          addr: key.addr,
+          lat: +key.lat,
+          lng: +key.lng,
+          useTime: key.useTime,
+          busiId: key.busiId,
+          busiNm: key.busiNm,
+          busiCall: key.busiCall,
+          stat: +key.stat,
+          statUpdDt: key.statUpdDt,
+          powerType: key.powerType,
+          zcode: key.zcode,
+          parkingFree: key.parkingFree,
+          note: key.note
         })
-      });
-      // for test
-      datas = datas.slice(0, 100)
-      return datas
-    }
+      })
+
+      newDatas.datas = positionArr
+
+      return newDatas
+    },
+    // chargeDataPre: state => {
+    //   let tempDatas = []
+    //   console.log(state.chargeDatas)
+    //   tempDatas.push(state.chargeDatas[0]);
+    //   for(var i = 1; i < state.chargeDatas.length; i++) {
+    //     if(state.chargeDatas[i].statId === state.chargeDatas[i-1].statId) {
+    //       i === 1 ? tempDatas = [] : ''
+    //       tempDatas.push({
+    //         statNm: state.chargeDatas[i].statNm,
+    //         statId: state.chargeDatas[i].statId,
+    //         chgerId: [state.chargeDatas[i-1].chgerId, state.chargeDatas[i].chgerId],
+    //         chgerType: [state.chargeDatas[i-1].chgerType, state.chargeDatas[i].chgerType],
+    //         addr: state.chargeDatas[i].addr,
+    //         lat: state.chargeDatas[i].lat,
+    //         lng: state.chargeDatas[i].lng,
+    //         useTime: state.chargeDatas[i].useTime,
+    //         busiId: state.chargeDatas[i].busiId,
+    //         busiNm: state.chargeDatas[i].busiNm,
+    //         busiCall: state.chargeDatas[i].busiCall,
+    //         stat: [state.chargeDatas[i-1].stat, state.chargeDatas[i].stat],
+    //         statUpdDt: [state.chargeDatas[i-1].statUpdDt, state.chargeDatas[i].statUpdDt],
+    //         powerType: [state.chargeDatas[i-1].powerType, state.chargeDatas[i].powerType],
+    //         zcode: state.chargeDatas[i].zcode,
+    //         parkingFree: state.chargeDatas[i].parkingFree,
+    //         note: state.chargeDatas[i].note,
+    //       })
+    //     }else {
+    //       tempDatas.push(state.chargeDatas[i])
+    //     }
+    //   }
+    //   return tempDatas
+    // }
   },
   mutations: {
     setData(state, payload) {

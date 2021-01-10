@@ -86,6 +86,9 @@ export const dataSetDes = {
           return '현장확인'
           break;
       }
+    },
+    useTimeSet: val => {
+      return (val === '') ? "사용가능시간 확인필요" : val
     }
   },
 }

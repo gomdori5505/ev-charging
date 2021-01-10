@@ -10,7 +10,7 @@
             <span class="headline">{{ apiData.statNm }}</span>
           </v-card-title>
           <v-card-text>
-            사용가능시간 : {{ apiData.useTime }}
+            사용가능시간 : {{ useTimeSet(apiData.useTime) }}
           </v-card-text>
           <v-simple-table>
             <template v-slot:default>
@@ -28,10 +28,21 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr
+                  v-if="apiData.countOfChger === 1"
+                >
                   <td class="text-xs-center">{{ apiData.powerType }}</td>
                   <td class="text-xs-center">{{ charTypeSet(apiData.chgerType) }}</td>
-                  <td class="text-xs-center">{{ statSet(apiData.stat).status }}<br>{{ statSet(apiData.stat).reason }}</td>
+                  <td class="text-xs-center">{{ statSet(apiData.stat).status }}<br>({{ statSet(apiData.stat).reason }})</td>
+                </tr>
+                <tr
+                  v-else-if="apiData.countOfChger > 1"
+                  v-for="(item, i) in arrData"
+                  :key=i
+                >
+                  <td class="text-xs-center">{{ item.powerType }}</td>
+                  <td class="text-xs-center">{{ charTypeSet(item.chgerType) }}</td>
+                  <td class="text-xs-center">{{ statSet(item.stat).status }}<br>({{ statSet(item.stat).reason }})</td>
                 </tr>
               </tbody>
             </template>
@@ -69,13 +80,26 @@ export default {
   name: 'DetailDialog',
   data() {
     return {
-      dialog: false
+      dialog: false,
+      arrData: []
     }
   },
   props: ['open', 'apiData'],
   watch: {
     open(newVal) {
       this.dialog = newVal
+    },
+    apiData(newVal) {
+      if(newVal.countOfChger > 1) {
+        this.arrData = []
+        for(let i = 0; newVal.countOfChger > i; i++) {
+          this.arrData.push({
+            powerType: newVal.powerTypeArr[i],
+            chgerType: newVal.chgerTypeArr[i],
+            stat: newVal.statArr[i]
+          })
+        }
+      }
     }
   },
   methods: {

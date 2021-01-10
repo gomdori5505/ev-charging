@@ -7,7 +7,7 @@
       :mapTypeId="mapTypeId"
       :libraries="libraries"
       @load="onLoad"
-      style="width:1000px; height:800px;"/>
+      :style="mapStyle"/>
     <DetailDialog :open="dialog" :apiData="propsApiData" @close=closeDialog />
   </div>
 </template>
@@ -32,17 +32,23 @@ export default {
       mapTypeId: VueDaumMap.MapTypeId.NORMAL, // 맵 타입
       libraries: ['services', 'clusterer', 'drawing'], // 추가로 불러올 라이브러리
       map: null, // 지도 객체. 지도가 로드되면 할당됨.
+      mapWidth: window.innerWidth,
+      mapHeight: window.innerHeight,
       dialog: null,
       propsApiData: null
     };
   },
   computed: {
+    mapStyle() {
+      return `width:${this.mapWidth}px; height:${this.mapHeight-64}px;`
+    }
+    ,
     ...mapGetters(['apiData']),
   },
   watch: {
     apiData(newVal) {
       this.setMarkerClusterer(newVal, this.map)
-    }
+    },
   },
   methods: {
     onLoad(map) {
@@ -87,10 +93,8 @@ export default {
         kakao.maps.event.addListener(marker, 'click', () => {
           this.dialog = false
           this.dialog = true
-          // for dialog
-          this.propsApiData = data
+          this.sendDialog(data, apiData)
         })
-
         return marker
       });
 
@@ -118,13 +122,44 @@ export default {
         customOverlay.setMap(null);
       };
     },
+    sendDialog(data, apiData) {
+      let count = 0
+      data.powerTypeArr = []
+      data.chgerTypeArr = []
+      data.statArr = []
+      data.chgerIdArr = []
+      
+      apiData.datas.forEach(key => {
+        if(data.statId === key.statId) {
+          data.powerTypeArr.push(key.powerType)
+          data.chgerTypeArr.push(key.chgerType)
+          data.statArr.push(key.stat)
+          data.chgerIdArr.push(key.chgerId)
+          count++
+        }
+      });
+      data.countOfChger = count
+
+      // for dialog
+      this.propsApiData = data
+    },
     closeDialog() {
       this.dialog = false
+    },
+    handleResize() {
+      this.mapWidth = window.innerWidth;
+      this.mapHeight = window.innerHeight;
     }
   }
   ,
   created() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+
     this.$store.dispatch('loadDatas')
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize);
   },
   mixins: [dataSetDes]
 };

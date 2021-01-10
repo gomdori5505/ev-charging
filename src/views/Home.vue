@@ -8,17 +8,20 @@
       :libraries="libraries"
       @load="onLoad"
       style="width:1000px; height:800px;"/>
+    <DetailDialog :open="dialog" @close=closeDialog />
   </div>
 </template>
 
 <script>
 import VueDaumMap from 'vue-daum-map'
 import { mapGetters } from 'vuex'
+import DetailDialog from '../components/DetailDialog'
 
 export default {
   name: "App",
   components: {
     VueDaumMap,
+    DetailDialog
   },
   data() {
     return {
@@ -27,7 +30,8 @@ export default {
       level: 5, // 지도의 레벨(확대, 축소 정도),
       mapTypeId: VueDaumMap.MapTypeId.NORMAL, // 맵 타입
       libraries: ['services', 'clusterer', 'drawing'], // 추가로 불러올 라이브러리
-      map: null // 지도 객체. 지도가 로드되면 할당됨.
+      map: null, // 지도 객체. 지도가 로드되면 할당됨.
+      dialog: null,
     };
   },
   computed: {
@@ -42,7 +46,7 @@ export default {
     onLoad(map) {
       this.map = map
     },
-    setMarkerClusterer(latlng, map) {
+    setMarkerClusterer(latlng, map, dialog) {
       let clusterer = new window.kakao.maps.MarkerClusterer({
         map: this.map,
         averageCenter: true,
@@ -55,12 +59,33 @@ export default {
           image: this.markerImage(data)
         });
 
-        let infowindow = new kakao.maps.InfoWindow({
-          content: data.statNm
+        let content = '<div class="wrap" style="background-color: white; text-align: center; padding: 0 10px;">' + 
+          '    <div class="info">' + 
+          '        <div class="title">' + 
+          `            ${data.statNm}` + 
+          '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+          '        </div>' + 
+          '        <div class="body">' + 
+          '            <div class="desc">' + 
+          `                <div>${data.chgerType}</div>` + 
+          `                <div>${data.stat}</div>` + 
+          '            </div>' + 
+          '        </div>' + 
+          '    </div>' +    
+          '</div>';
+
+        let customOverlay = new kakao.maps.CustomOverlay({
+          content: content,
+          position: new kakao.maps.LatLng(data.lat, data.lng),
+          yAnchor: 1.7
         })
 
-        kakao.maps.event.addListener(marker, 'mouseover', this.makeOverListener(map, marker, infowindow))
-        kakao.maps.event.addListener(marker, 'mouseout', this.makeOutListener(infowindow))
+        kakao.maps.event.addListener(marker, 'mouseover', this.makeOverListener(map, customOverlay))
+        kakao.maps.event.addListener(marker, 'mouseout', this.makeOutListener(customOverlay))
+        kakao.maps.event.addListener(marker, 'click', () => {
+          this.dialog = false
+          this.dialog = true
+        })
 
         return marker
       });
@@ -79,15 +104,18 @@ export default {
 
       return markerImage
     },
-    makeOverListener(map, marker, infowindow) {
+    makeOverListener(map, customOverlay) {
       return function() {
-        infowindow.open(map, marker);
+        customOverlay.setMap(map);
       };
     },
-    makeOutListener(infowindow) {
+    makeOutListener(customOverlay) {
       return function() {
-        infowindow.close();
+        customOverlay.setMap(null);
       };
+    },
+    closeDialog() {
+      this.dialog = false
     }
   }
   ,

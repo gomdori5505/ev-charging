@@ -15,6 +15,7 @@
 <script>
 import VueDaumMap from 'vue-daum-map'
 import { mapGetters } from 'vuex'
+import { dataSetDes } from '@/mixins/dataSetDes'
 import DetailDialog from '../components/DetailDialog'
 
 export default {
@@ -67,8 +68,8 @@ export default {
           '        </div>' + 
           '        <div class="body">' + 
           '            <div class="desc">' + 
-          `                <div>${data.chgerType}</div>` + 
-          `                <div>${data.stat}</div>` + 
+          `                <div>${this.charTypeSet(data.chgerType)}</div>` + 
+          `                <div>${this.statSet(data.stat).status}</div>` + 
           '            </div>' + 
           '        </div>' + 
           '    </div>' +    
@@ -96,7 +97,7 @@ export default {
       let imageSrc = null
       data.stat === 2
           ? imageSrc = require("@/assets/img/charge_enable.png")
-          : data === 3
+          : data.stat === 3
             ? imageSrc = require("@/assets/img/charge_charging.png")
             : imageSrc = require("@/assets/img/charge_unable.png")
       let imageSize = new kakao.maps.Size(24, 35)
@@ -121,6 +122,7 @@ export default {
   ,
   created() {
     this.$store.dispatch('loadDatas')
-  }
+  },
+  mixins: [dataSetDes]
 };
 </script>

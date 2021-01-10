@@ -1,26 +1,50 @@
 <template>
-  <div id="detailDialog" data-app>
+  <div id="detailDialog" data-app v-if="apiData">
     <v-row justify="center">
       <v-dialog
         v-model="dialog"
         width="600px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-          >
-            Open Dialog
-          </v-btn>
-        </template>
         <v-card v-click-outside="closeDialog">
           <v-card-title>
-            <span class="headline">Use Google's location service?</span>
+            <span class="headline">{{ apiData.statNm }}</span>
           </v-card-title>
           <v-card-text>
-            Lorem ipsum dolor sit amet, semper quis, sapien id natoque elit. Nostra urna at, magna at neque sed sed ante imperdiet, dolor mauris cursus velit, velit non, sem nec. Volutpat sem ridiculus placerat leo, augue in, duis erat proin condimentum in a eget, sed fermentum sed vestibulum varius ac, vestibulum volutpat orci ut elit eget tortor. Ultrices nascetur nulla gravida ante arcu. Pharetra rhoncus morbi ipsum, nunc tempor debitis, ipsum pellentesque, vitae id quam ut mauris dui tempor, aptent non. Quisque turpis. Phasellus quis lectus luctus orci eget rhoncus. Amet donec vestibulum mattis commodo, nulla aliquet, nibh praesent, elementum nulla. Sit lacus pharetra tempus magna neque pellentesque, nulla vel erat.
+            사용가능시간 : {{ apiData.useTime }}
+          </v-card-text>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-center">
+                    구분
+                  </th>
+                  <th class="text-center">
+                    충전기 타입
+                  </th>
+                  <th class="text-center">
+                    운전상태
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-xs-center">{{ apiData.powerType }}</td>
+                  <td class="text-xs-center">{{ charTypeSet(apiData.chgerType) }}</td>
+                  <td class="text-xs-center">{{ statSet(apiData.stat).status }}<br>{{ statSet(apiData.stat).reason }}</td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          <v-card-subtitle>
+            상세정보
+          </v-card-subtitle>
+          <v-card-text>
+            주소 : {{ apiData.addr }}<br>
+            운영기관 : {{ apiData.busiNm }}<br>
+            연락처 : {{ apiData.busiCall }}<br>
+            주차비 : {{ parkingFreeSet(apiData.parkingFree) }}<br>
+            참고사항 : {{ apiData.note }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -29,14 +53,7 @@
               text
               @click="closeDialog"
             >
-              Disagree
-            </v-btn>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="closeDialog"
-            >
-              Agree
+              닫기
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -46,14 +63,16 @@
 </template>
 
 <script>
+import { dataSetDes } from '@/mixins/dataSetDes'
+
 export default {
   name: 'DetailDialog',
   data() {
     return {
-      dialog: false,
+      dialog: false
     }
   },
-  props: ['open'],
+  props: ['open', 'apiData'],
   watch: {
     open(newVal) {
       this.dialog = newVal
@@ -64,5 +83,6 @@ export default {
       this.$emit('close')
     }
   },
+  mixins: [dataSetDes]
 }
 </script>

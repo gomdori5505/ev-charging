@@ -8,7 +8,7 @@
       :libraries="libraries"
       @load="onLoad"
       style="width:1000px; height:800px;"/>
-    <DetailDialog :open="dialog" @close=closeDialog />
+    <DetailDialog :open="dialog" :apiData="propsApiData" @close=closeDialog />
   </div>
 </template>
 
@@ -33,13 +33,14 @@ export default {
       libraries: ['services', 'clusterer', 'drawing'], // 추가로 불러올 라이브러리
       map: null, // 지도 객체. 지도가 로드되면 할당됨.
       dialog: null,
+      propsApiData: null
     };
   },
   computed: {
-    ...mapGetters(['latlng']),
+    ...mapGetters(['apiData']),
   },
   watch: {
-    latlng(newVal) {
+    apiData(newVal) {
       this.setMarkerClusterer(newVal, this.map)
     }
   },
@@ -47,14 +48,14 @@ export default {
     onLoad(map) {
       this.map = map
     },
-    setMarkerClusterer(latlng, map, dialog) {
+    setMarkerClusterer(apiData, map, dialog) {
       let clusterer = new window.kakao.maps.MarkerClusterer({
         map: this.map,
         averageCenter: true,
         minLevel: 10,
       });
       
-      let markers = latlng.datas.map(data => {
+      let markers = apiData.datas.map(data => {
         let marker = new kakao.maps.Marker({
           position : new kakao.maps.LatLng(data.lat, data.lng),
           image: this.markerImage(data)
@@ -86,6 +87,8 @@ export default {
         kakao.maps.event.addListener(marker, 'click', () => {
           this.dialog = false
           this.dialog = true
+          // for dialog
+          this.propsApiData = data
         })
 
         return marker

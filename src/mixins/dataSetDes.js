@@ -44,7 +44,7 @@ export const dataSetDes = {
           break;
         case 3:
           return {
-            status: '충전중',
+            status: '사용불가(충전중)',
             reason: '충전중'
           }
           break;

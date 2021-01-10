@@ -25,7 +25,7 @@ export default new Vuex.Store({
     //   // newDatas = newDatas.slice(0, 100)
     //   return newDatas
     // },
-    latlng: state => {
+    apiData: state => {
       let newDatas = {}
       let positionArr = []
       

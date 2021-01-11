@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import axios from "axios"
-import "@/fontAwesomeIcon.js";
+import "@/fontAwesomeIcon";
+import './plugins/firebase'
 
 Vue.config.productionTip = false
 

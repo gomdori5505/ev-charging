@@ -1,11 +1,11 @@
 <template>
-  <div id="detailDialog" data-app v-if="apiData">
+  <div id="detailDialog" v-if="dialog" v-click-outside="closeDialog">
     <v-row justify="center">
       <v-dialog
         v-model="dialog"
         width="600px"
       >
-        <v-card v-click-outside="closeDialog">
+        <v-card>
           <v-card-title>
             <span class="headline">{{ apiData.statNm }}</span>
           </v-card-title>
@@ -60,7 +60,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="green darken-1"
+              color="red darken-1"
               text
               @click="closeDialog"
             >
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       dialog: false,
-      arrData: []
+      arrData: [],
     }
   },
   props: ['open', 'apiData'],
@@ -103,7 +103,7 @@ export default {
     }
   },
   methods: {
-    closeDialog() {
+    closeDialog: function() {
       this.$emit('close')
     }
   },

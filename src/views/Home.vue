@@ -19,7 +19,7 @@ import { dataSetDes } from '@/mixins/dataSetDes'
 import DetailDialog from '../components/DetailDialog'
 
 export default {
-  name: "App",
+  name: "Home",
   components: {
     VueDaumMap,
     DetailDialog
@@ -48,7 +48,7 @@ export default {
   watch: {
     apiData(newVal) {
       this.setMarkerClusterer(newVal, this.map)
-    },
+    }
   },
   methods: {
     onLoad(map) {
@@ -76,13 +76,12 @@ export default {
           )
           
         let content = '<div class="wrap" style="background-color: white; text-align: center; padding: 0 10px;">' + 
-          '    <div class="info">' + 
-          '        <div class="title">' + 
-          `            ${data.statNm}` + 
-          '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+          '    <div>' + 
+          '        <div>' + 
+          `            ${data.statNm}` +
           '        </div>' + 
-          '        <div class="body">' + 
-          '            <div class="desc">' + 
+          '        <div>' + 
+          '            <div>' + 
           `                <div>${this.charTypeSet(data.chgerType)}</div>` + 
           `                <div>${this.statSet(data.stat).status}</div>` + 
           '            </div>' + 
@@ -99,8 +98,12 @@ export default {
         kakao.maps.event.addListener(marker, 'mouseover', this.makeOverListener(map, customOverlay))
         kakao.maps.event.addListener(marker, 'mouseout', this.makeOutListener(customOverlay))
         kakao.maps.event.addListener(marker, 'click', () => {
-          this.dialog = false
-          this.dialog = true
+          
+          // dialog click outside 클릭 동시 중복 방지
+          setTimeout(() => {
+            this.dialog = true
+          }, 10);
+          
           this.sendDialog(data, apiData)
         })
         return marker

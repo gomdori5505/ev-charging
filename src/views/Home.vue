@@ -69,10 +69,12 @@ export default {
         
         // marker priority
         data.stat !== 2
-          && data.stat === 3
-            ? marker.setZIndex(-1)
-            : marker.setZIndex(-2)
-
+          && (
+            data.stat === 3
+              ? marker.setZIndex(-1)
+              : marker.setZIndex(-2)
+          )
+          
         let content = '<div class="wrap" style="background-color: white; text-align: center; padding: 0 10px;">' + 
           '    <div class="info">' + 
           '        <div class="title">' + 

@@ -1,11 +1,11 @@
 <template>
-  <div id="detailDialog" v-if="dialog" v-click-outside="closeDialog">
+  <div id="detailDialog" v-if="dialog">
     <v-row justify="center">
       <v-dialog
         v-model="dialog"
         width="600px"
       >
-        <v-card>
+        <v-card v-click-outside="closeDialog">
           <v-card-title>
             <span class="headline">{{ apiData.statNm }}</span>
           </v-card-title>

@@ -8,7 +8,6 @@ export default new Vuex.Store({
   state: {
     key: "0ZgyPnMBptn91BSdo5JXU4jvYNYB7puUnQzkXKP81T9PY67NeKiuOgIn%2baQmDk8zPmd9yhslatMa%2b7OGZFsEaw%3d%3d",
     chargeDatas: [],
-
   },
   getters: {
     apiData: state => {
@@ -48,8 +47,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadDatas ({ commit, state }, payload) {
-      axios.get(`/openapi/services/EvCharger/getChargerInfo?serviceKey=${state.key}`)
+    loadDatas ({ commit, state }) {
+      axios.get(
+        process.env.NODE_ENV === 'production'
+        ? `http://open.ev.or.kr:8080/openapi/services/EvCharger/getChargerInfo?serviceKey=${state.key}`
+        : `/openapi/services/EvCharger/getChargerInfo?serviceKey=${state.key}`
+      )
         .then(res => {
           // handle success
           console.log(res);

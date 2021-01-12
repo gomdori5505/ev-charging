@@ -18,6 +18,9 @@
         <v-spacer></v-spacer>
         <v-btn
           text
+          router :to='{
+            name: "signup"
+          }'
           exact
         >
           회원가입
@@ -25,6 +28,9 @@
 
         <v-btn
           text
+          router :to='{
+            name: "login"
+          }'
           exact
         >
           로그인

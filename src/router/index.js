@@ -1,7 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import firebase from 'firebase/app'
 
 Vue.use(VueRouter)
+
+const rejectAuthUser = (to, from, next) => {
+  if(firebase.auth().currentUser) {
+    next({name: 'mypage'})
+  } else {
+    next()
+  }
+}
+
+const onlyAuthUser = (to, from, next) => {
+  if(firebase.auth().currentUser) {
+    next()
+  } else {
+    next({name: 'login'})
+  }
+}
 
 const routes = [
   {
@@ -12,12 +29,20 @@ const routes = [
   {
     path: '/login',
     name: 'login',
+    beforeEnter: rejectAuthUser,
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
     path: '/signup',
     name: 'signup',
+    beforeEnter: rejectAuthUser,
     component: () => import(/* webpackChunkName: "signup" */ '../views/Signup.vue')
+  },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    beforeEnter: onlyAuthUser,
+    component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage.vue')
   }
 ]
 

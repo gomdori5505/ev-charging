@@ -1,10 +1,10 @@
 <template>
-  <v-app id="inspire">
   <v-container fill-height style="max-width: 450px;">
     <v-layout align-center row wrap>
       <v-flex xs-12>
         <v-alert
           type="error"
+          v-if="inCorrectAccount"
         >
           아이디와 비밀번호를 확인해주세요.
         </v-alert>
@@ -39,7 +39,6 @@
       </v-flex>
     </v-layout>
   </v-container>
-  </v-app>
 </template>
 
 <script>
@@ -49,7 +48,23 @@ export default {
     return {
       email: null,
       password: null,
+      inCorrectAccount: false
     }
-  },  
+  },
+  methods: {
+    login() {
+      this.$firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          this.$router.push({
+            name: 'home'
+          })
+        })
+        .catch((error) => {
+          console.log(error.code)
+          console.log(error.message)
+          this.inCorrectAccount = true
+        });
+    }
+  },
 }
 </script>

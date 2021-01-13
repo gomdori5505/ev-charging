@@ -55,6 +55,7 @@ export default {
     login() {
       this.$firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then((user) => {
+          this.$store.dispatch('snackBarOpen', '로그인 되었습니다.')
           this.$router.push({
             name: 'home'
           })

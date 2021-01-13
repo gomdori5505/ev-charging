@@ -60,7 +60,6 @@
         :timeout="timeout"
         absolute
         top
-        rounded="pill"
         color="success"
       >
         {{ $store.state.snackBarText }}
@@ -69,7 +68,7 @@
           <v-btn
             text
             v-bind="attrs"
-            @click="snackbar = false"
+            @click="$store.state.snackBarStatus = false"
           >
             Close
           </v-btn>
@@ -88,13 +87,13 @@ export default {
   name: 'App',
   data() {
     return {
-      text: this.snackBarText,
       timeout: 4000
     }
   },
   methods: {
     signout() {
       this.$firebase.auth().signOut().then(() => {
+        this.$store.dispatch('snackBarOpen', '로그아웃 되었습니다.')
         this.$router.push({
           name: 'home'
         }).catch(() => {})

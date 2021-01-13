@@ -90,7 +90,6 @@ export default {
       this.$refs.form.validate() && (
         this.$firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
           .then((user) => {
-            console.log("success to signup")
             this.$store.dispatch('snackBarOpen', '회원가입이 완료되었습니다.')
             this.$router.push({
               name: 'home'

@@ -10,8 +10,10 @@ export default new Vuex.Store({
     key: "0ZgyPnMBptn91BSdo5JXU4jvYNYB7puUnQzkXKP81T9PY67NeKiuOgIn%2baQmDk8zPmd9yhslatMa%2b7OGZFsEaw%3d%3d",
     chargeDatas: [],
     checkLoginData: null,
+    uidData: null,
     snackBarStatus: false,
-    snackBarText: null
+    snackBarText: null,
+    checkFavoriteStatus: false
   },
   getters: {
     apiData: state => {
@@ -50,11 +52,23 @@ export default new Vuex.Store({
       state.chargeDatas = payload
     },
     setLoginData(state, payload) {
-      state.checkLoginData = payload
+      state.checkLoginData = payload.login
+      state.uidData = payload.uid
     },
     setSnackBarOpen(state, payload) {
       state.snackBarStatus = true
       state.snackBarText = payload
+    },
+    setCheckFavorite(state, payload) {
+      payload
+        ? (state.checkFavoriteStatus = {
+          status: payload.value,
+          value: payload.value
+        })
+        : (state.checkFavoriteStatus = {
+          status: false,
+          value: null
+        })
     }
   },
   actions: {
@@ -80,14 +94,47 @@ export default new Vuex.Store({
     checkLogin({ commit }) {
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-          commit('setLoginData', 1)
+          commit('setLoginData', {
+            login: 1,
+            uid: user.uid
+          })
         } else {
-          commit('setLoginData', 0)
+          commit('setLoginData', {
+            login: 0,
+            uid: false
+          })
         }
       });
     },
     snackBarOpen({ commit }, payload) {
       commit('setSnackBarOpen', payload)
+    },
+    checkFavorite({ commit }, payload) {
+      firebase.database().ref('favorite').child(payload.userId).child(payload.statId).once('value').then((data) => {
+        console.log(data.val()) // 존재하면 null이 아니다!! {value: true} or {value: false} or null
+        commit('setCheckFavorite', data.val())
+      })
+    },
+    proceedFavorite({ commit }, payload) {
+      switch (payload.type) {
+        case 'create':
+          firebase.database().ref('favorite').child(payload.userId).child(payload.statId).set({
+            value: payload.value
+          })
+          commit('setCheckFavorite', {value: payload.value})
+          break;
+      
+        default:
+          firebase.database().ref('favorite').child(payload.userId).child(payload.statId).update({
+            value: payload.value
+          })
+          commit('setCheckFavorite', {value: payload.value})
+          break;
+      }
+      // create
+      // firebase.database().ref('favorite').child(payload.userId).set({
+      //   statId: this.apiData.statId
+      // });
     }
   },
   modules: {

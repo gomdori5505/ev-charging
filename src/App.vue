@@ -55,6 +55,26 @@
           </v-btn>
         </div>
       </v-toolbar>
+      <v-snackbar
+        v-model="$store.state.snackBarStatus"
+        :timeout="timeout"
+        absolute
+        top
+        rounded="pill"
+        color="success"
+      >
+        {{ $store.state.snackBarText }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-card>
     <v-main>
       <router-view />
@@ -66,6 +86,12 @@
 import { mapState } from 'vuex'
 export default {
   name: 'App',
+  data() {
+    return {
+      text: this.snackBarText,
+      timeout: 4000
+    }
+  },
   methods: {
     signout() {
       this.$firebase.auth().signOut().then(() => {
@@ -81,7 +107,9 @@ export default {
     this.$store.dispatch('checkLogin')
   },
   computed: {
-    ...mapState(['checkLoginData'])
+    ...mapState([
+      'checkLoginData'
+    ])
   }
 };
 </script>

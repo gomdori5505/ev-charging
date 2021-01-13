@@ -9,7 +9,9 @@ export default new Vuex.Store({
   state: {
     key: "0ZgyPnMBptn91BSdo5JXU4jvYNYB7puUnQzkXKP81T9PY67NeKiuOgIn%2baQmDk8zPmd9yhslatMa%2b7OGZFsEaw%3d%3d",
     chargeDatas: [],
-    checkLoginData: null
+    checkLoginData: null,
+    snackBarStatus: false,
+    snackBarText: null
   },
   getters: {
     apiData: state => {
@@ -49,6 +51,10 @@ export default new Vuex.Store({
     },
     setLoginData(state, payload) {
       state.checkLoginData = payload
+    },
+    setSnackBarOpen(state, payload) {
+      state.snackBarStatus = true
+      state.snackBarText = payload
     }
   },
   actions: {
@@ -79,6 +85,9 @@ export default new Vuex.Store({
           commit('setLoginData', 0)
         }
       });
+    },
+    snackBarOpen({ commit }, payload) {
+      commit('setSnackBarOpen', payload)
     }
   },
   modules: {

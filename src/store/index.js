@@ -111,8 +111,7 @@ export default new Vuex.Store({
     },
     checkFavorite({ commit }, payload) {
       firebase.database().ref('favorite').child(payload.userId).child(payload.statId).once('value').then((data) => {
-        console.log(data.val()) // 존재하면 null이 아니다!! {value: true} or {value: false} or null
-        commit('setCheckFavorite', data.val())
+        commit('setCheckFavorite', data.val()) // data.val() -> 존재하면 null이 아니다!! {value: true} or {value: false} or null
       })
     },
     proceedFavorite({ commit }, payload) {
@@ -131,10 +130,6 @@ export default new Vuex.Store({
           commit('setCheckFavorite', {value: payload.value})
           break;
       }
-      // create
-      // firebase.database().ref('favorite').child(payload.userId).set({
-      //   statId: this.apiData.statId
-      // });
     }
   },
   modules: {

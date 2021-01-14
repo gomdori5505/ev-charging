@@ -96,7 +96,7 @@ export default {
         this.$store.dispatch('snackBarOpen', '로그아웃 되었습니다.')
         this.$router.push({
           name: 'home'
-        })
+        }).catch(()=>{}) // home에서 home으로 가려고하면 에러뜸. 무시하기위해 catch
       }).catch(error => {
         console.log(error)
       });

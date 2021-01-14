@@ -65,7 +65,7 @@ export default {
           console.log(error.message)
           this.inCorrectAccount = true
         });
-    }
+    },
   },
 }
 </script>

@@ -167,7 +167,7 @@ export default {
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
 
-    this.$store.dispatch('loadDatas')
+    this.$store.dispatch('loadEvDatas')
   },
   destroyed() {
     window.removeEventListener('resize', this.handleResize);

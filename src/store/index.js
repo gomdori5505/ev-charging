@@ -13,7 +13,11 @@ export default new Vuex.Store({
     uidData: null,
     snackBarStatus: false,
     snackBarText: null,
-    checkFavoriteStatus: false
+    checkFavoriteStatus: false,
+    email: null,
+    nickName: null,
+    updateEmailResult: false,
+
   },
   getters: {
     apiData: state => {
@@ -69,10 +73,17 @@ export default new Vuex.Store({
           status: false,
           value: null
         })
+    },
+    setGetUserData(state, payload) {
+      state.email = payload.email,
+      state.nickName = payload.nickName
+    },
+    setUpdateEmail(state, payload) {
+      state.updateEmailResult = payload
     }
   },
   actions: {
-    loadDatas ({ commit, state }) {
+    loadEvDatas({ commit, state }) {
       axios.get(
         process.env.NODE_ENV === 'production'
         ? `http://open.ev.or.kr:8080/openapi/services/EvCharger/getChargerInfo?serviceKey=${state.key}`
@@ -104,7 +115,7 @@ export default new Vuex.Store({
             uid: false
           })
         }
-      });
+      })
     },
     snackBarOpen({ commit }, payload) {
       commit('setSnackBarOpen', payload)
@@ -137,6 +148,24 @@ export default new Vuex.Store({
         nickName: payload.nickName
       })
       
+    },
+    getUserData({ commit }, payload) {
+      firebase.database().ref('user').child(payload).once('value').then((data) => {
+        commit('setGetUserData', data.val())
+      })
+    },
+    updateEmail({ commit }, payload) {
+      firebase.auth().currentUser.updateEmail(payload).then(function() { // auth 내 이메일 변경
+        // firebase.database().ref('user').child(현재 유저id).update({ // database user 내 이메일 변경
+        //   email: payload
+        // })
+        commit('setUpdateEmail', true)
+      }).catch(function(error) {
+        commit('setUpdateEmail', false)
+      });
+    },
+    updateNickName({ commit }, payload) {
+
     }
   },
   modules: {

@@ -17,15 +17,39 @@
         </v-btn>
         <v-spacer></v-spacer>
         <div v-if="checkLoginData === 1">
-          <v-btn
-            text
-            router :to='{
-              name: "mypage"
-            }'
-            exact
-          >
-            마이페이지
-          </v-btn>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                v-bind="attrs"
+                v-on="on"
+                exact
+              >
+                마이페이지
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                link
+                router :to='{
+                  name: "mypage",
+                  params: {
+                    page: "profile"
+                  }
+                }'
+              >
+                <v-list-item-title>
+                  aaa
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>bbb</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>ccc</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <v-btn
             text
             exact

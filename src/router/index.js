@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const rejectAuthUser = (to, from, next) => {
   if(firebase.auth().currentUser) {
-    next({name: 'mypage'})
+    next({name: 'home'})
   } else {
     next()
   }
@@ -39,7 +39,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "signup" */ '../views/Signup.vue')
   },
   {
-    path: '/mypage',
+    path: '/mypage/:page',
     name: 'mypage',
     beforeEnter: onlyAuthUser,
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage.vue')

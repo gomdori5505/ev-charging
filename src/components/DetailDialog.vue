@@ -110,13 +110,15 @@ export default {
     open(newVal) {
       this.dialog = newVal
 
-      // 열릴때만 실행되어야된다. 닫힐때는 실행되면 안됨...
-      newVal && (
-        this.$store.dispatch('checkFavorite', {
-          userId: this.uidData,
-          statId: this.apiData.statId
-        })
-      )
+      this.checkLoginData === 1 // 로그인이 되어있을때
+        // 열릴때만 실행되어야된다. 닫힐때는 실행되면 안됨...
+        ? (newVal && (
+            this.$store.dispatch('checkFavorite', {
+              userId: this.uidData,
+              statId: this.apiData.statId
+            })
+          )
+        ) : ''
     },
     apiData(newVal) {
       if(newVal.countOfChger > 1) {

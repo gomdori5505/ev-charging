@@ -130,6 +130,13 @@ export default new Vuex.Store({
           commit('setCheckFavorite', {value: payload.value})
           break;
       }
+    },
+    createUser({ commit }, payload) {
+      firebase.database().ref('user').child(payload.userId).set({
+        email: payload.email,
+        nickName: payload.nickName
+      })
+      
     }
   },
   modules: {

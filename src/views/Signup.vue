@@ -21,21 +21,27 @@
               <v-text-field
                 v-model="email"
                 :rules="emailRules"
-                label="이메일을 입력하세요."
+                label="E-mail을 입력하세요."
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="nickName"
+                :rules="nickNameRules"
+                label="사용하실 NickName을 입력하세요."
                 required
               ></v-text-field>
               <v-text-field
                 v-model="password"
                 :rules="passwordRules"
                 type="password"
-                label="패스워드를 입력하세요."
+                label="Password를 입력하세요."
                 required
               ></v-text-field>
               <v-text-field
                 v-model="passwordConfirm"
                 :rules="passwordConfirmRules"
                 type="password"
-                label="패스워드를 다시한번 입력하세요."
+                label="Password를 다시한번 입력하세요."
                 required
               ></v-text-field>
               <v-btn
@@ -70,6 +76,12 @@ export default {
         v => !!v || 'E-mail은 필수입니다.',
         v => /.+@.+\..+/.test(v) || 'E-mail이 유효하지 않습니다.'
       ],
+      nickName: null,
+      nickNameRules: [
+        v => !!v || 'NickName은 필수입니다.',
+        v => (v && v.length >= 2) || 'NickName은 2자리 이상이어야 합니다.',
+        v => /^[a-zA-Z가-힣0-9]*$/.test(v) || 'NickName은 영문, 숫자만 허용됩니다.'
+      ],
       password: null,
       passwordRules: [
         v => !!v || 'Password는 필수입니다.',
@@ -78,8 +90,7 @@ export default {
       passwordConfirm: null,
       passwordConfirmRules: [
         v => !!v || 'Password는 필수입니다.',
-        v => 
-          v === this.password || 'Password는 동일해야 합니다.'
+        v => v === this.password || 'Password는 동일해야 합니다.'
       ],
       accountIssue: false,
       accountIssueReason: null
@@ -90,6 +101,11 @@ export default {
       this.$refs.form.validate() && (
         this.$firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
           .then((user) => {
+            this.$store.dispatch('createUser', {
+              userId: user.user.uid,
+              email: this.email,
+              nickName: this.nickName
+            })
             this.$store.dispatch('snackBarOpen', '회원가입이 완료되었습니다.')
             this.$router.push({
               name: 'home'

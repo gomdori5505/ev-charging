@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios"
 import firebase from 'firebase/app'
+import router from '../router';
 
 Vue.use(Vuex)
 
@@ -16,8 +17,7 @@ export default new Vuex.Store({
     checkFavoriteStatus: false,
     email: null,
     nickName: null,
-    updateEmailResult: false,
-
+    updateUserDataResult: false
   },
   getters: {
     apiData: state => {
@@ -78,8 +78,8 @@ export default new Vuex.Store({
       state.email = payload.email,
       state.nickName = payload.nickName
     },
-    setUpdateEmail(state, payload) {
-      state.updateEmailResult = payload
+    setUpdateUserData(state, payload) {
+      state.updateUserDataResult = payload
     }
   },
   actions: {
@@ -154,18 +154,50 @@ export default new Vuex.Store({
         commit('setGetUserData', data.val())
       })
     },
-    updateEmail({ commit }, payload) {
-      firebase.auth().currentUser.updateEmail(payload).then(function() { // auth 내 이메일 변경
-        // firebase.database().ref('user').child(현재 유저id).update({ // database user 내 이메일 변경
-        //   email: payload
-        // })
-        commit('setUpdateEmail', true)
-      }).catch(function(error) {
-        commit('setUpdateEmail', false)
+    updateUserData({ commit }, payload) {
+      // email auth
+      firebase.auth().currentUser.updateEmail(payload.email).then(() => { // auth 내 이메일 변경
+        console.log('success to update the email on Auth')
+        // email DB
+        firebase.database().ref('user').child(firebase.auth().currentUser.uid).update({ // database user 내 이메일 변경
+          email: payload.email
+        }, error => {
+          if(error) {
+            console.log(error)
+            commit('setUpdateUserData', false)
+          } else {
+            console.log('success to update the email on DB')
+            // nickName
+            firebase.database().ref('user').child(firebase.auth().currentUser.uid).update({ // database user 내 이메일 변경
+              nickName: payload.nickName
+            }, error => {
+              if(error) {
+                console.log(error)
+                commit('setUpdateUserData', false)
+              } else {
+                console.log('success to update the nickName on DB')
+                // password
+                firebase.auth().currentUser.updatePassword(payload.password).then(() => {
+                  console.log('success to update the password on Auth')
+                  router.push({
+                    name: 'mypage',
+                    params: {
+                      page: 'profile'
+                    }
+                  })
+                  commit('setSnackBarOpen', '프로필 수정이 완료되었습니다.')
+                }).catch(error => {
+                  console.log(error)
+                  commit('setUpdateUserData', false)
+                })
+              }
+            })
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+        commit('setUpdateUserData', false)
       });
-    },
-    updateNickName({ commit }, payload) {
-
     }
   },
   modules: {

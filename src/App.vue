@@ -39,7 +39,7 @@
                 }'
               >
                 <v-list-item-title>
-                  aaa
+                  프로필
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>

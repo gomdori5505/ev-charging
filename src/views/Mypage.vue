@@ -1,14 +1,15 @@
 <template>
-  <div v-if="$route.params.page === 'profile'">
+  <span v-if="$route.params.page === 'profile'">
     <Profile />
-  </div>
-  <div v-else>
+  </span>
+  <span v-else>
     profile else
-  </div>
+  </span>
 </template>
 
 <script>
 import Profile from '../components/Profile'
+
 export default {
   name: "Mypage",
   components: {

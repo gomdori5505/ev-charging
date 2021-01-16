@@ -42,8 +42,18 @@
                   프로필
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title>bbb</v-list-item-title>
+              <v-list-item
+                link
+                router :to='{
+                  name: "mypage",
+                  params: {
+                    page: "favorite"
+                  }
+                }'
+              >
+                <v-list-item-title>
+                  나의 즐겨찾기
+                </v-list-item-title>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title>ccc</v-list-item-title>

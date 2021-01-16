@@ -7,10 +7,14 @@ import axios from "axios"
 import "@/fontAwesomeIcon";
 import './plugins/firebase'
 import firebase from 'firebase/app'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
+
+Vue.use(VueLodash, { name: 'custom' , lodash: lodash })
 
 let app;
 firebase.auth().onAuthStateChanged(user => {

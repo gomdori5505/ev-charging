@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from "axios"
 import firebase from 'firebase/app'
 import router from '../router';
+import mixin from '../mixins/dataSetDes'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     checkFavoriteStatus: false,
     email: null,
     nickName: null,
-    updateUserDataResult: false
+    updateUserDataResult: false,
+    favoriteDatas: null
   },
   getters: {
     apiData: state => {
@@ -80,6 +82,9 @@ export default new Vuex.Store({
     },
     setUpdateUserData(state, payload) {
       state.updateUserDataResult = payload
+    },
+    setFavoriteList(state, payload) {
+      state.favoriteDatas = payload
     }
   },
   actions: {
@@ -198,6 +203,30 @@ export default new Vuex.Store({
         console.log(error)
         commit('setUpdateUserData', false)
       });
+    },
+    getFavoriteList({ commit }, payload) {
+      let favoriteDatas = []
+      firebase.database().ref('favorite').child(payload.uidData).once('value').then((data) => {
+        for (const statId in data.val()) {
+          if(data.val()[statId].value === true) {
+            payload.apiData.forEach(e => {
+              if(statId === e.statId) {
+                favoriteDatas.push({
+                  statId: e.statId,
+                  statNm: e.statNm,
+                  stat: e.stat,
+                  addr: e.addr,
+                  useTime: e.useTime
+                })
+              }
+            });
+          }
+        }
+        favoriteDatas = _.uniqBy(favoriteDatas, 'statId');
+        commit('setFavoriteList', favoriteDatas)
+      })
+
+      
     }
   },
   modules: {

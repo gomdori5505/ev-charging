@@ -17,7 +17,6 @@
       :items="favoriteDatas"
       :search="search"
     >
-      
       <template v-slot:item.actions="{ item }">
         <v-icon
           small
@@ -90,7 +89,6 @@ import { mapState, mapGetters } from 'vuex'
             e.stat = this.statSet(e.stat).status+'\n('+this.statSet(e.stat).reason+')'
           }
         });
-        console.log(newVal)
       }
     },
     created() {

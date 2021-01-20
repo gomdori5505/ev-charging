@@ -6,15 +6,13 @@
       tile
     >
       <v-toolbar>
-        <v-btn
-          text
-          router :to='{
-            name: "home"
-          }'
-          exact
-        >
-          EV
-        </v-btn>
+        <router-link :to="{ name: 'home' }">
+          <v-img
+            src="@/assets/img/logo.png"
+            max-height="50"
+            max-width="50"
+          ></v-img>
+        </router-link>
         <v-spacer></v-spacer>
         <div v-if="checkLoginData === 1">
           <v-menu offset-y>

@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import axios from "axios"
 import firebase from 'firebase/app'
 import router from '../router';
-import mixin from '../mixins/dataSetDes'
 
 Vue.use(Vuex)
 

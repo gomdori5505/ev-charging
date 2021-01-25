@@ -53,9 +53,6 @@
                   나의 즐겨찾기
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title>ccc</v-list-item-title>
-              </v-list-item>
             </v-list>
           </v-menu>
           <v-btn
